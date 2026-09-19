@@ -1,0 +1,132 @@
+INTRODUCCIÓN AL MACHINE LEARNING
+
+¿Qué es el Machine Learning?
+
+El Machine Learning (ML) es una rama de la inteligencia artificial que permite a los sistemas aprender y mejorar automáticamente a partir de la experiencia sin ser programados explícitamente. En lugar de seguir instrucciones fijas, los algoritmos de ML construyen modelos matemáticos basados en datos de entrenamiento para hacer predicciones o tomar decisiones.
+
+El concepto fue acuñado por Arthur Samuel en 1959, quien lo definió como "el campo de estudio que otorga a las computadoras la capacidad de aprender sin ser explícitamente programadas". Hoy en día, el Machine Learning impulsa tecnologías como los motores de recomendación, el reconocimiento facial, los asistentes virtuales y los sistemas de diagnóstico médico.
+
+Tipos de Aprendizaje en Machine Learning
+
+Aprendizaje Supervisado
+
+El aprendizaje supervisado es el tipo más común de ML. El modelo se entrena con un conjunto de datos etiquetados, es decir, datos para los cuales se conoce la respuesta correcta (etiqueta). El objetivo es aprender una función que mapee las entradas a las salidas, de manera que el modelo pueda predecir la salida correcta para nuevas entradas desconocidas.
+
+Ejemplos de tareas de aprendizaje supervisado:
+- Clasificación: determinar a qué categoría pertenece una entrada (spam/no spam, tumor benigno/maligno)
+- Regresión: predecir un valor numérico continuo (precio de una casa, temperatura)
+
+Algoritmos supervisados comunes incluyen: Regresión Lineal, Regresión Logística, Árboles de Decisión, Random Forest, Support Vector Machines (SVM), K-Nearest Neighbors (KNN) y Redes Neuronales.
+
+Aprendizaje No Supervisado
+
+En el aprendizaje no supervisado, el modelo trabaja con datos sin etiquetar. El objetivo es descubrir patrones ocultos o estructuras intrínsecas en los datos. No hay una respuesta "correcta" predefinida.
+
+Tareas principales:
+- Clustering (Agrupamiento): agrupar datos similares (K-Means, DBSCAN, Clustering Jerárquico)
+- Reducción de dimensionalidad: comprimir datos manteniendo información relevante (PCA, t-SNE, UMAP)
+- Detección de anomalías: identificar puntos de datos inusuales
+- Reglas de asociación: descubrir relaciones entre variables (algoritmo Apriori)
+
+Aprendizaje por Refuerzo
+
+El aprendizaje por refuerzo es un paradigma donde un agente aprende a tomar decisiones interactuando con un entorno. El agente recibe recompensas o penalizaciones según sus acciones y aprende a maximizar la recompensa acumulada a lo largo del tiempo.
+
+Se utiliza en: juegos (AlphaGo, OpenAI Five), robótica, optimización de sistemas de control, gestión de recursos en redes y sistemas de recomendación.
+
+Conceptos Fundamentales de Machine Learning
+
+Características (Features) y Etiquetas (Labels)
+
+Las características son las variables de entrada que el modelo utiliza para hacer predicciones. En un conjunto de datos de precios de casas, las características podrían ser: superficie en metros cuadrados, número de habitaciones, ubicación, año de construcción. La etiqueta o variable objetivo es lo que queremos predecir: el precio de la casa.
+
+Entrenamiento, Validación y Prueba
+
+El proceso de Machine Learning divide los datos en tres conjuntos:
+- Conjunto de entrenamiento (Training set): datos usados para que el modelo aprenda los parámetros. Generalmente representa el 60-80% de los datos.
+- Conjunto de validación (Validation set): datos usados para ajustar hiperparámetros y evaluar el rendimiento durante el desarrollo. Representa el 10-20% de los datos.
+- Conjunto de prueba (Test set): datos reservados para la evaluación final del modelo. Nunca deben verse durante el entrenamiento. Representa el 10-20% de los datos.
+
+Overfitting y Underfitting
+
+El overfitting (sobreajuste) ocurre cuando el modelo aprende demasiado bien los datos de entrenamiento, incluyendo el ruido y las particularidades específicas, perdiendo la capacidad de generalizar a nuevos datos. Un modelo sobreajustado tiene alta precisión en entrenamiento pero bajo rendimiento en datos nuevos.
+
+El underfitting (subajuste) ocurre cuando el modelo es demasiado simple para capturar los patrones subyacentes de los datos. Tiene bajo rendimiento tanto en entrenamiento como en evaluación.
+
+El equilibrio entre bias (sesgo) y variance (varianza) es fundamental: modelos simples tienen alto bias y baja varianza, mientras que modelos complejos tienen bajo bias pero alta varianza.
+
+Regularización
+
+La regularización es un conjunto de técnicas para prevenir el overfitting añadiendo una penalización a la complejidad del modelo:
+- Regularización L1 (Lasso): añade la suma del valor absoluto de los coeficientes como penalización. Tiende a generar modelos esparsos con muchos coeficientes iguales a cero.
+- Regularización L2 (Ridge): añade la suma del cuadrado de los coeficientes. Reduce los coeficientes pero raramente los lleva a cero.
+- Elastic Net: combinación de L1 y L2.
+- Dropout: técnica específica para redes neuronales que desactiva aleatoriamente neuronas durante el entrenamiento.
+
+Evaluación de Modelos
+
+Métricas para Clasificación
+
+- Accuracy (Precisión global): porcentaje de predicciones correctas sobre el total. Puede ser engañosa con clases desbalanceadas.
+- Precision (Precisión): de todos los casos predichos como positivos, ¿cuántos son realmente positivos? TP/(TP+FP)
+- Recall (Sensibilidad): de todos los casos realmente positivos, ¿cuántos fueron detectados? TP/(TP+FN)
+- F1-Score: media armónica de precision y recall. Útil cuando las clases están desbalanceadas.
+- AUC-ROC: área bajo la curva ROC, mide la capacidad discriminativa del modelo.
+- Matriz de Confusión: tabla que muestra las predicciones vs los valores reales.
+
+Métricas para Regresión
+
+- MAE (Mean Absolute Error): promedio de los errores absolutos. Menos sensible a outliers.
+- MSE (Mean Squared Error): promedio de los errores al cuadrado. Penaliza más los errores grandes.
+- RMSE (Root Mean Squared Error): raíz cuadrada del MSE. Mismas unidades que la variable objetivo.
+- R² (Coeficiente de Determinación): proporción de la varianza explicada por el modelo. Va de 0 a 1.
+
+Validación Cruzada
+
+La validación cruzada (cross-validation) es una técnica para evaluar el rendimiento del modelo de manera más robusta. La técnica más común es K-Fold Cross Validation:
+1. Dividir el conjunto de datos en K partes iguales (folds)
+2. Entrenar el modelo K veces, cada vez usando K-1 folds para entrenamiento y 1 fold para validación
+3. Promediar las métricas de los K experimentos
+
+Esto proporciona una estimación más confiable del rendimiento del modelo que una sola división train/test.
+
+Algoritmos Clásicos de Machine Learning
+
+Regresión Lineal
+
+La regresión lineal modela la relación entre variables de entrada y una variable de salida continua mediante una función lineal. Es el algoritmo más simple pero poderoso en muchos contextos. La función de costo que minimiza es el Error Cuadrático Medio (MSE). Se resuelve analíticamente con la ecuación normal o mediante descenso del gradiente.
+
+Regresión Logística
+
+A pesar de su nombre, es un algoritmo de clasificación. Utiliza la función sigmoide para transformar la salida lineal en una probabilidad entre 0 y 1. Se usa para clasificación binaria y puede extenderse a clasificación multiclase mediante softmax.
+
+Árboles de Decisión
+
+Los árboles de decisión aprenden reglas de decisión simples a partir de los datos. Dividen el espacio de características recursivamente basándose en criterios como la ganancia de información (para clasificación) o la reducción de varianza (para regresión). Son interpretables pero propensos al overfitting.
+
+Random Forest
+
+Random Forest es un algoritmo de ensemble que construye múltiples árboles de decisión con subconjuntos aleatorios de datos y características, combinando sus predicciones. Es más robusto que un árbol individual y maneja bien el overfitting. Es uno de los algoritmos más usados en competencias de ML por su balance entre rendimiento e interpretabilidad.
+
+Support Vector Machines (SVM)
+
+SVM busca el hiperplano de máximo margen que separa las clases. Puede usar funciones kernel para manejar problemas no linealmente separables. Es efectivo en espacios de alta dimensionalidad y cuando hay pocas muestras de entrenamiento.
+
+K-Nearest Neighbors (KNN)
+
+KNN es un algoritmo perezoso (lazy learning) que clasifica nuevos puntos basándose en las K muestras de entrenamiento más cercanas. No hay una fase de entrenamiento explícita. La elección de K y la métrica de distancia son fundamentales para su rendimiento.
+
+Gradient Boosting
+
+Gradient Boosting construye modelos secuencialmente, donde cada nuevo modelo corrige los errores del anterior. Algoritmos como XGBoost, LightGBM y CatBoost son implementaciones altamente optimizadas que dominan competencias de ML en tabular data.
+
+El Pipeline en Machine Learning
+
+Un proyecto de ML típico sigue estos pasos:
+1. Definición del problema y recopilación de datos
+2. Exploración y análisis de datos (EDA)
+3. Preprocesamiento: limpieza, normalización, encoding de categorías, manejo de valores faltantes
+4. Feature Engineering: creación y selección de características
+5. Selección y entrenamiento del modelo
+6. Evaluación y ajuste de hiperparámetros
+7. Despliegue y monitoreo en producción

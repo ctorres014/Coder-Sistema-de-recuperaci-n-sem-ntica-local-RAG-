@@ -1,0 +1,152 @@
+REDES NEURONALES Y DEEP LEARNING
+
+Historia y Fundamentos
+
+Las redes neuronales artificiales están inspiradas en el funcionamiento del cerebro humano. El primer modelo fue el Perceptrón, propuesto por Frank Rosenblatt en 1957. Este modelo simple tomaba entradas binarias, las multiplicaba por pesos y producía una salida binaria. Sin embargo, el perceptrón sólo podía resolver problemas linealmente separables.
+
+En la década de 1980, el algoritmo de backpropagation revivió el interés en las redes neuronales, permitiendo entrenar redes con múltiples capas. Sin embargo, los problemas de capacidad computacional y el vanishing gradient problem limitaron su uso. Fue en 2006, con el trabajo de Geoffrey Hinton sobre Deep Belief Networks, y posteriormente con AlexNet en 2012 (que ganó ImageNet con una margen significativa usando GPUs), cuando comenzó la era moderna del Deep Learning.
+
+Arquitectura Básica de una Red Neuronal
+
+Una red neuronal artificial está compuesta por:
+
+Neuronas (Nodos)
+Cada neurona recibe entradas, las pondera con pesos, suma los resultados, aplica una función de activación y produce una salida. Matemáticamente: output = f(Σ(w_i * x_i) + b), donde x_i son las entradas, w_i los pesos, b el bias y f la función de activación.
+
+Capas
+- Capa de Entrada (Input Layer): recibe los datos brutos. Su tamaño corresponde al número de características.
+- Capas Ocultas (Hidden Layers): capas intermedias donde ocurre la transformación de los datos. El número y tamaño de estas capas determina la capacidad del modelo.
+- Capa de Salida (Output Layer): produce la predicción final. Su tamaño depende de la tarea: 1 neurona para regresión o clasificación binaria, N neuronas para clasificación N-clases.
+
+Pesos y Biases
+Los parámetros aprendibles de la red. Los pesos determinan la importancia de cada conexión, mientras que el bias permite desplazar la función de activación. Se inicializan aleatoriamente y se actualizan durante el entrenamiento.
+
+Funciones de Activación
+
+Las funciones de activación introducen no linealidad en la red, permitiendo aprender relaciones complejas.
+
+Sigmoid: f(x) = 1/(1+e^(-x))
+Produce valores entre 0 y 1. Útil para clasificación binaria en la capa de salida. Problema: vanishing gradient en valores extremos.
+
+Tanh: f(x) = (e^x - e^(-x))/(e^x + e^(-x))
+Produce valores entre -1 y 1. Centrada en cero, mejor que sigmoid para capas ocultas. Aún sufre de vanishing gradient.
+
+ReLU (Rectified Linear Unit): f(x) = max(0, x)
+La función de activación más popular para capas ocultas. Computacionalmente eficiente y mitiga el vanishing gradient. Problema: dying ReLU (neuronas que siempre producen 0).
+
+Leaky ReLU: f(x) = max(0.01x, x)
+Variante de ReLU que permite un pequeño gradiente para valores negativos, solucionando el problema dying ReLU.
+
+Softmax: f(x_i) = e^(x_i) / Σe^(x_j)
+Normaliza las salidas a probabilidades que suman 1. Usada en la capa de salida para clasificación multiclase.
+
+GELU (Gaussian Error Linear Unit): Función de activación usada en Transformers modernos como BERT y GPT, que pondera suavemente las activaciones según una distribución gaussiana.
+
+Entrenamiento: Backpropagation y Descenso del Gradiente
+
+Función de Pérdida (Loss Function)
+Mide qué tan lejos están las predicciones del modelo de los valores reales:
+- Binary Cross-Entropy: para clasificación binaria
+- Categorical Cross-Entropy: para clasificación multiclase
+- MSE: para regresión
+
+Backpropagation
+Es el algoritmo central para entrenar redes neuronales. Utiliza la regla de la cadena del cálculo para calcular el gradiente de la función de pérdida respecto a cada parámetro de la red. El proceso:
+1. Forward pass: calcular la predicción
+2. Calcular la pérdida
+3. Backward pass: calcular gradientes de atrás hacia adelante
+4. Actualizar parámetros
+
+Descenso del Gradiente
+Actualiza los parámetros en dirección opuesta al gradiente: θ = θ - α * ∇L(θ), donde α es la tasa de aprendizaje (learning rate).
+
+Variantes:
+- SGD (Stochastic Gradient Descent): actualiza con un ejemplo a la vez. Ruidoso pero puede escapar mínimos locales.
+- Mini-batch GD: actualiza con un batch de ejemplos. Balance entre SGD y batch GD.
+- Adam (Adaptive Moment Estimation): algoritmo adaptivo que ajusta la tasa de aprendizaje por parámetro. Es el optimizador más popular actualmente.
+- RMSprop, AdaGrad, AdamW: otras variantes populares.
+
+Hiperparámetros Clave
+- Learning Rate: determina el tamaño del paso en la actualización. Crítico para la convergencia.
+- Batch Size: número de ejemplos procesados antes de actualizar parámetros.
+- Épocas: número de veces que el modelo ve todo el dataset.
+- Arquitectura: número y tamaño de capas ocultas.
+
+Redes Neuronales Convolucionales (CNN)
+
+Las CNNs son especialmente efectivas para datos con estructura espacial, como imágenes. Su arquitectura aprovecha tres propiedades: localidad (los píxeles cercanos están correlacionados), invarianza a la traslación (un objeto es reconocible independientemente de su posición) y jerarquía de características.
+
+Capas de una CNN:
+- Capa Convolucional: aplica filtros (kernels) que aprenden características locales. Los filtros se deslizan sobre la entrada detectando bordes, texturas, formas.
+- Capa de Pooling: reduce la dimensionalidad espacial. Max pooling toma el valor máximo en cada región.
+- Capa Flatten: aplana el tensor para conectar con capas densas.
+- Capas Fully Connected: realizan la clasificación final.
+
+Arquitecturas famosas: LeNet-5, AlexNet, VGG, ResNet (con conexiones residuales que resuelven el vanishing gradient en redes muy profundas), Inception, EfficientNet.
+
+Redes Neuronales Recurrentes (RNN)
+
+Las RNN están diseñadas para procesar datos secuenciales (texto, series temporales, audio). Tienen conexiones que forman ciclos, permitiendo que la información persista (memoria).
+
+Problema: El vanishing/exploding gradient hace difícil aprender dependencias a largo plazo.
+
+LSTM (Long Short-Term Memory)
+
+Propuesta por Hochreiter y Schmidhuber en 1997. Introduce el concepto de celda de memoria y tres puertas que controlan el flujo de información:
+- Puerta de olvido (forget gate): decide qué información descartar
+- Puerta de entrada (input gate): decide qué nueva información almacenar
+- Puerta de salida (output gate): decide qué información usar para la salida
+
+Esta arquitectura resuelve el vanishing gradient y puede aprender dependencias de largo plazo efectivamente.
+
+GRU (Gated Recurrent Unit)
+
+Versión simplificada de LSTM con dos puertas (update y reset). Menor número de parámetros, similar rendimiento en muchas tareas.
+
+La Arquitectura Transformer
+
+Propuesta en 2017 por Vaswani et al. en el paper "Attention is All You Need", revolucionó el procesamiento del lenguaje natural y luego la visión por computadora.
+
+Mecanismo de Atención (Attention)
+
+La atención permite al modelo enfocarse en partes relevantes de la secuencia de entrada al generar cada token de salida. El mecanismo de atención calcula una puntuación de relevancia entre cada par de posiciones en la secuencia.
+
+Self-Attention: cada posición atiende a todas las demás posiciones en la misma secuencia. Calcula tres matrices: Queries (Q), Keys (K) y Values (V). La atención se calcula como: Attention(Q,K,V) = softmax(QK^T / √d_k) * V
+
+Multi-Head Attention: aplica múltiples mecanismos de atención en paralelo con diferentes proyecciones lineales, permitiendo que el modelo atienda a información de diferentes posiciones y subspacios de representación simultáneamente.
+
+Positional Encoding: como el Transformer procesa toda la secuencia en paralelo, se añade información posicional a los embeddings para que el modelo sepa el orden de los tokens.
+
+Arquitectura Encoder-Decoder del Transformer:
+- Encoder: procesa la secuencia de entrada y genera representaciones contextualizadas
+- Decoder: genera la secuencia de salida autoregressivamente, atendiendo al encoder
+
+Ventajas del Transformer sobre RNN:
+- Paralelización durante el entrenamiento
+- Captura dependencias de largo alcance directamente
+- Escalabilidad: más datos y parámetros mejoran consistentemente el rendimiento
+
+Modelos pre-entrenados basados en Transformer: BERT (bidireccional, para comprensión), GPT (unidireccional, para generación), T5, XLNet, RoBERTa.
+
+Técnicas de Regularización en Deep Learning
+
+- Dropout: durante el entrenamiento, desactiva aleatoriamente neuronas con probabilidad p. Previene la co-adaptación de neuronas.
+- Batch Normalization: normaliza las activaciones en cada mini-batch. Acelera el entrenamiento y actúa como regularizador.
+- Layer Normalization: alternativa a Batch Norm usada en Transformers.
+- Weight Decay: regularización L2 aplicada a los pesos.
+- Early Stopping: detiene el entrenamiento cuando la validación deja de mejorar.
+- Data Augmentation: incrementar artificialmente el dataset aplicando transformaciones (rotaciones, recortes, cambios de color para imágenes).
+
+Transfer Learning y Fine-Tuning
+
+El Transfer Learning consiste en reutilizar un modelo pre-entrenado en una tarea grande para una tarea específica. En lugar de entrenar desde cero, se toman las capas aprendidas y se ajustan.
+
+Enfoques:
+- Feature Extraction: congelar las capas pre-entrenadas y sólo entrenar las capas superiores.
+- Fine-tuning completo: entrenar todas las capas del modelo pre-entrenado con una tasa de aprendizaje pequeña.
+- Instruction tuning: ajustar un LLM con ejemplos de instrucciones y respuestas.
+- RLHF (Reinforcement Learning from Human Feedback): técnica usada para alinear LLMs con preferencias humanas (ChatGPT).
+
+Hardware para Deep Learning
+
+Las redes neuronales profundas requieren gran capacidad computacional. Las GPUs (Graphics Processing Units) son ideales por su arquitectura de múltiples núcleos paralelos. NVIDIA domina el mercado con sus GPUs A100, H100 y V100. Los TPUs (Tensor Processing Units) de Google están diseñados específicamente para operaciones de tensores en ML.

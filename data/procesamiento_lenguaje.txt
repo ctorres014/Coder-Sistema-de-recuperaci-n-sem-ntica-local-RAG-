@@ -1,0 +1,161 @@
+PROCESAMIENTO DE LENGUAJE NATURAL (NLP)
+
+Introducción al NLP
+
+El Procesamiento de Lenguaje Natural (NLP, por sus siglas en inglés) es la rama de la inteligencia artificial que estudia la interacción entre computadoras y lenguaje humano. Su objetivo es permitir que las máquinas comprendan, interpreten y generen lenguaje de manera útil y significativa.
+
+El NLP combina lingüística computacional, estadística y machine learning para resolver problemas como la traducción automática, el análisis de sentimientos, el reconocimiento de entidades, el resumen de textos y los sistemas de respuesta a preguntas.
+
+Desafíos del Lenguaje Natural
+
+El lenguaje humano presenta múltiples desafíos para las computadoras:
+- Ambigüedad léxica: una palabra puede tener múltiples significados según el contexto (banco: institución financiera o mueble)
+- Ambigüedad sintáctica: una oración puede tener múltiples interpretaciones gramaticales
+- Correferencia: pronombres y expresiones que refieren a la misma entidad
+- Sarcasmo e ironía: el significado contrario al literal
+- Conocimiento del mundo: comprender implicaciones que requieren conocimiento externo
+- Variaciones lingüísticas: dialectos, jergas, errores ortográficos
+
+Preprocesamiento de Texto
+
+Tokenización
+
+La tokenización es el proceso de dividir el texto en unidades más pequeñas llamadas tokens. Puede realizarse a nivel de palabras, subpalabras o caracteres.
+
+- Tokenización por palabras: divide el texto en palabras. Simple pero problemático con contracciones, puntuación y palabras compuestas.
+- Tokenización por subpalabras (Byte-Pair Encoding, BPE): divide palabras en subunidades frecuentes. Permite manejar palabras desconocidas y vocabularios compactos. Usado por GPT-2, GPT-3, GPT-4.
+- SentencePiece: tokenizador basado en modelos de lenguaje que trabaja directamente con bytes Unicode. Usado por modelos como T5 y LLaMA.
+- WordPiece: variante de BPE usada por BERT que mantiene palabras completas cuando son frecuentes y las divide en subpalabras cuando son raras.
+
+Normalización
+
+- Lowercasing: convertir todo a minúsculas para reducir el vocabulario
+- Stemming: reducir palabras a su raíz (corriendo → corr). Proceso heurístico, puede generar no-palabras.
+- Lematización: reducir palabras a su forma canónica (corriendo → correr). Lingüísticamente preciso, requiere diccionario.
+- Eliminación de stopwords: remover palabras muy frecuentes con poco valor semántico (el, la, de, en).
+- Eliminación de puntuación y caracteres especiales.
+
+Representaciones Clásicas del Texto
+
+Bag of Words (BoW)
+
+Representa el texto como un vector de conteo de palabras, ignorando el orden. Cada dimensión corresponde a una palabra del vocabulario. Simple pero pierde información contextual y de orden.
+
+TF-IDF (Term Frequency - Inverse Document Frequency)
+
+Mejora el Bag of Words ponderando la importancia de cada término. TF mide cuántas veces aparece un término en un documento. IDF penaliza términos que aparecen en muchos documentos (poco informativos). TF-IDF = TF * IDF. Es una mejora significativa sobre BoW para recuperación de información.
+
+N-gramas
+
+Secuencias de N palabras consecutivas. Bigramas (N=2): "machine learning", "deep learning". Trigramas (N=3): "redes neuronales profundas". Captura algo de contexto pero crece exponencialmente con N.
+
+Modelos de Lenguaje Estadísticos
+
+Los modelos de lenguaje estadísticos calculan la probabilidad de una secuencia de palabras: P(w1, w2, ..., wn). Los modelos de n-gramas asumen que la probabilidad de una palabra depende sólo de las N-1 palabras anteriores (asunción de Markov). Son efectivos para tareas simples pero tienen vocabulario limitado y no capturan dependencias a largo plazo.
+
+Word Embeddings
+
+Word2Vec (2013)
+
+Propuesto por Mikolov et al. en Google. Aprende representaciones vectoriales densas de palabras de manera que palabras semánticamente similares tienen vectores cercanos. Dos arquitecturas:
+- CBOW (Continuous Bag of Words): predice una palabra a partir de su contexto
+- Skip-gram: predice el contexto a partir de una palabra
+
+Propiedades notables: las operaciones aritméticas capturan relaciones semánticas. Ejemplo famoso: King - Man + Woman ≈ Queen. Los vectores capturan analogías, relaciones de género, plurales, etc.
+
+GloVe (Global Vectors for Word Representation)
+
+Desarrollado en Stanford. Aprende embeddings factorizando la matriz de co-ocurrencia global de palabras. Combina ventajas de métodos locales (Word2Vec) y globales (LSA). Produce embeddings de alta calidad, ampliamente utilizados como punto de partida.
+
+FastText
+
+Extensión de Word2Vec de Facebook que representa palabras como la suma de vectores de n-gramas de caracteres. Maneja mejor palabras fuera del vocabulario y morfología. Especialmente útil para idiomas morfológicamente ricos.
+
+Modelos de Lenguaje Pre-entrenados (PLMs)
+
+ELMo (Embeddings from Language Models)
+
+Primer modelo que generó embeddings contextualizados. Las representaciones de cada palabra dependen de toda la oración. Usa LSTMs bidireccionales. El mismo token "banco" tendrá diferentes vectores según el contexto.
+
+BERT (Bidirectional Encoder Representations from Transformers)
+
+Publicado por Google en 2018. Basado en el encoder del Transformer. Entrenado con dos tareas:
+1. Masked Language Model (MLM): predecir tokens enmascarados aleatoriamente
+2. Next Sentence Prediction (NSP): determinar si dos oraciones son consecutivas
+
+BERT es bidireccional: considera el contexto tanto a la izquierda como a la derecha de cada token. Produce embeddings altamente contextualizados. Se ha convertido en el punto de partida estándar para innumerables tareas de NLP.
+
+Variantes de BERT: RoBERTa (más datos, sin NSP), DistilBERT (más pequeño y rápido), ALBERT (parámetros compartidos), XLM-R (multilingüe).
+
+GPT (Generative Pre-trained Transformer)
+
+Desarrollado por OpenAI. Basado en el decoder del Transformer. Entrenado para predecir el siguiente token (causal language modeling). Es unidireccional: sólo considera el contexto a la izquierda.
+
+Evolución: GPT-1 → GPT-2 (1.5B parámetros) → GPT-3 (175B parámetros) → GPT-4. GPT-3 demostró capacidades few-shot impresionantes. GPT-4 es multimodal (texto e imagen).
+
+Sentence Transformers
+
+Adaptan BERT para producir embeddings a nivel de oración (en lugar de token). Fundamentales para tareas de búsqueda semántica y recuperación de información. Ejemplos: all-MiniLM-L6-v2, all-mpnet-base-v2, paraphrase-multilingual-mpnet-base-v2.
+
+Tareas Principales de NLP
+
+Clasificación de Texto
+
+Asignar categorías a documentos de texto: análisis de sentimientos (positivo/negativo/neutro), detección de spam, clasificación de noticias, detección de toxicidad.
+
+Enfoque moderno: Fine-tuning de BERT con una capa de clasificación sobre el token [CLS].
+
+Named Entity Recognition (NER)
+
+Identificar y clasificar entidades nombradas en el texto: personas, organizaciones, lugares, fechas, cantidades. Tarea de etiquetado de secuencias. Ejemplos: "Pedro Almodóvar [PERSONA] nació en Calzada de Calatrava [LUGAR]".
+
+Relation Extraction
+
+Identificar relaciones entre entidades: "[Madrid] es_capital_de [España]". Fundamental para construir grafos de conocimiento.
+
+Question Answering (QA)
+
+Responder preguntas en lenguaje natural. Tipos:
+- Extractive QA: extraer la respuesta directamente del texto fuente (SQuAD benchmark)
+- Generative QA: generar la respuesta en lenguaje natural
+- Open-domain QA: buscar la respuesta en una base de conocimiento amplia
+
+Traducción Automática
+
+Traducir texto de un idioma a otro. Evolución: sistemas basados en reglas → estadísticos → neuronales (NMT). Los sistemas modernos basados en Transformer (como el de Google Translate) superaron a los humanos en algunos benchmarks.
+
+Resumen Automático
+
+- Extractivo: seleccionar oraciones clave del documento original
+- Abstractivo: generar un nuevo texto que capture la esencia del original. Los modelos seq2seq (T5, BART, Pegasus) son estado del arte.
+
+Text Generation
+
+Generar texto coherente y fluido. Desde completar frases hasta generar artículos completos. Los LLMs como GPT-4, Claude, LLaMA son los sistemas de generación más capaces actualmente.
+
+Evaluación en NLP
+
+- BLEU (Bilingual Evaluation Understudy): compara n-gramas entre texto generado y referencia. Usado para traducción y generación.
+- ROUGE: recall-oriented, mide solapamiento de n-gramas. Usado para resumen.
+- BERTScore: compara embeddings contextualizados para evaluar similitud semántica.
+- Benchmarks: GLUE, SuperGLUE, MMLU para evaluar capacidades generales de LLMs.
+
+Large Language Models (LLMs)
+
+Los LLMs son modelos de lenguaje con miles de millones de parámetros entrenados en enormes corpus de texto. Emergieron capacidades sorprendentes a escala: razonamiento, programación, matemáticas, seguir instrucciones.
+
+Técnicas clave:
+- Instruction Tuning: ajuste fino con pares instrucción-respuesta para seguir instrucciones
+- RLHF: aprendizaje por refuerzo con retroalimentación humana para alinear comportamiento
+- Chain-of-Thought Prompting: solicitar al modelo que muestre su razonamiento paso a paso
+- In-Context Learning: proveer ejemplos en el prompt sin actualizar pesos (few-shot)
+
+Prompting Engineering
+
+El arte de diseñar instrucciones efectivas para LLMs:
+- Zero-shot: instrucción directa sin ejemplos
+- Few-shot: instrucción con algunos ejemplos de referencia
+- Chain-of-Thought: instruir al modelo a razonar paso a paso
+- Role prompting: asignar un rol específico al modelo
+
+RAG (Retrieval Augmented Generation) complementa los LLMs con recuperación de información de una base de conocimiento externa, permitiendo respuestas más precisas y verificables.

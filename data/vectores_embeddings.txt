@@ -1,0 +1,178 @@
+VECTORES, EMBEDDINGS Y BASES DE DATOS VECTORIALES
+
+¿Qué son los Embeddings?
+
+Los embeddings son representaciones numéricas densas de datos (texto, imágenes, audio) en un espacio vectorial de dimensión fija. La idea fundamental es que datos semánticamente similares tienen representaciones vectoriales cercanas en dicho espacio.
+
+Un embedding convierte datos de alta dimensión (como palabras de un vocabulario de 50.000 términos, representadas como one-hot vectors de 50.000 dimensiones) en vectores densos de menor dimensión (típicamente 128 a 4096 dimensiones) que capturan significado semántico.
+
+La propiedad más importante de los embeddings de calidad es que la distancia vectorial refleja la similitud semántica. Dos frases con significados similares tendrán embeddings cercanos, independientemente de las palabras exactas utilizadas.
+
+Propiedades del Espacio Vectorial de Embeddings
+
+Similitud Coseno
+
+La métrica de similitud más usada para comparar embeddings es la similitud coseno: cos(θ) = (A·B) / (|A| * |B|). Mide el coseno del ángulo entre dos vectores. Un valor de 1 indica vectores idénticos (misma dirección), 0 indica ortogonalidad (no relacionados), y -1 indica vectores opuestos.
+
+La distancia euclidiana también se usa, pero la similitud coseno es preferida para embeddings de texto porque no depende de la magnitud del vector, sólo de su dirección.
+
+Relaciones Semánticas en el Espacio Vectorial
+
+Los buenos embeddings capturan relaciones semánticas y sintácticas. La famosa analogía word2vec: v(rey) - v(hombre) + v(mujer) ≈ v(reina). Clusters naturales emergen en el espacio: palabras de países, capitales, profesiones, colores se agrupan.
+
+Con sentence embeddings, podemos calcular la similitud entre "El gato está sobre la alfombra" y "El felino reposa en el tapete" - que tendrán embeddings similares a pesar de usar vocabulario diferente.
+
+Tipos de Embeddings
+
+Word Embeddings
+
+Generan un vector único por palabra, sin considerar el contexto. El vector de "banco" es el mismo en "fui al banco a retirar dinero" que en "me senté en el banco del parque".
+- Word2Vec (Google, 2013): dimensiones típicas 100-300
+- GloVe (Stanford, 2014): dimensiones típicas 50-300
+- FastText (Facebook, 2016): incluye embeddings de subpalabras
+
+Contextual Embeddings
+
+Cada token recibe un embedding diferente según su contexto en la oración.
+- ELMo: primer sistema ampliamente adoptado de embeddings contextuales
+- BERT: genera embeddings de alta calidad para cada token
+- GPT: embeddings contextuales orientados a generación
+
+Sentence Embeddings
+
+Generan un vector único que representa toda una oración o párrafo.
+- Sentence-BERT (SBERT): optimizado para comparar pares de oraciones
+- all-MiniLM-L6-v2: modelo compacto y eficiente para búsqueda semántica
+- all-mpnet-base-v2: mayor calidad, más lento
+- text-embedding-ada-002: embedding de OpenAI, 1536 dimensiones, muy popular
+- text-embedding-3-small/large: modelos más recientes de OpenAI, mejor relación costo-calidad
+- nomic-embed-text: embedding de Nomic AI disponible localmente mediante Ollama
+
+Image Embeddings
+
+- CLIP (OpenAI): embeddings que conectan texto e imagen en el mismo espacio vectorial
+- ViT (Vision Transformer): embeddings de imágenes usando Transformers
+- ResNet, VGG: embeddings de características extraídas de CNNs pre-entrenadas
+
+Multimodal Embeddings
+
+Representan en el mismo espacio vectorial diferentes modalidades (texto, imagen, audio). CLIP es el ejemplo más conocido: permite buscar imágenes usando texto y viceversa.
+
+Bases de Datos Vectoriales (Vector Databases)
+
+Las bases de datos vectoriales están diseñadas para almacenar, indexar y buscar eficientemente grandes colecciones de embeddings. Son el componente central de los sistemas RAG modernos.
+
+Operaciones Fundamentales
+
+- Inserción: almacenar un embedding junto con sus metadatos (texto original, fuente, etc.)
+- Búsqueda por similitud (Similarity Search): dado un query embedding, encontrar los K vectores más cercanos
+- Búsqueda híbrida: combinar búsqueda vectorial con filtros de metadatos
+
+Algoritmos de Indexación Vectorial
+
+La búsqueda de vecinos más cercanos en espacios de alta dimensión es computacionalmente costosa. Los algoritmos de Approximate Nearest Neighbor (ANN) ofrecen excelente velocidad sacrificando algo de precisión.
+
+- Flat Index (Fuerza Bruta): compara el query contra todos los vectores. Exacto pero O(n) por consulta. Sólo práctico para colecciones pequeñas (< 100K vectores).
+- IVF (Inverted File Index): divide el espacio en clusters (celdas de Voronoi) y sólo busca en los clusters más cercanos al query. Mucho más rápido que fuerza bruta.
+- HNSW (Hierarchical Navigable Small World): grafo de proximidad jerárquico. Excelente velocidad y recall. Usado por Chroma, Weaviate, Qdrant.
+- Product Quantization (PQ): comprime vectores para reducir memoria. Permite índices de millones de vectores en RAM.
+- ScaNN: algoritmo de Google optimizado para alta dimensión.
+
+ChromaDB
+
+ChromaDB es una base de datos vectorial de código abierto diseñada para aplicaciones de IA. Es fácil de usar y tiene integración nativa con LangChain, LlamaIndex y otras librerías populares.
+
+Características de ChromaDB:
+- Modo en memoria (efímero) y modo persistente en disco
+- Soporte para metadatos y filtros
+- Función de embedding incluida (puede usar OpenAI, Sentence Transformers, u otras)
+- API simple y bien documentada
+- Ideal para desarrollo y proyectos de tamaño mediano
+
+Uso básico de ChromaDB con LangChain:
+```python
+from langchain_chroma import Chroma
+from langchain_ollama import OllamaEmbeddings
+
+embeddings = OllamaEmbeddings(model="nomic-embed-text")
+vectorstore = Chroma(
+    persist_directory="./vectorstore",
+    embedding_function=embeddings,
+    collection_name="mis_documentos"
+)
+```
+
+FAISS (Facebook AI Similarity Search)
+
+Biblioteca de Facebook/Meta para búsqueda eficiente de vecinos aproximados. Altamente optimizada para CPU y GPU. Soporta índices de miles de millones de vectores. No tiene servidor propio, se usa como biblioteca. Ideal para producción a gran escala cuando se gestiona la infraestructura propia.
+
+Pinecone
+
+Base de datos vectorial como servicio (cloud-native). Sin necesidad de gestionar infraestructura. Escala automáticamente. Soporta actualizaciones en tiempo real. Tiene un tier gratuito limitado. Popular en producción por su facilidad de uso y escalabilidad.
+
+Weaviate
+
+Base de datos vectorial de código abierto con capacidades de grafo. Soporta búsqueda vectorial, keyword y híbrida. Tiene módulos integrados para generar embeddings. Puede desplegarse localmente o en cloud.
+
+Qdrant
+
+Base de datos vectorial de código abierto escrita en Rust. Alta performance. Soporta payloads ricos con filtrado avanzado. Disponible como servicio cloud o self-hosted. Excelente para aplicaciones que necesitan filtros complejos junto con búsqueda vectorial.
+
+Milvus
+
+Base de datos vectorial de código abierto distribuida. Diseñada para escala masiva (miles de millones de vectores). Arquitectura desacoplada de almacenamiento y cómputo. Popular en empresas con grandes colecciones de embeddings.
+
+RAG: Retrieval Augmented Generation
+
+RAG es un patrón de arquitectura que combina la recuperación de información (búsqueda en una base de conocimiento) con la generación de texto (LLM) para producir respuestas precisas y verificables.
+
+Componentes de un Sistema RAG
+
+1. Ingesta de Documentos
+- Cargar documentos (PDF, TXT, HTML, etc.)
+- Dividir en fragmentos (chunks) con tamaño y solapamiento configurables
+- Generar embeddings para cada fragmento
+- Almacenar en la base de datos vectorial con metadatos
+
+2. Retrieval (Recuperación)
+- Convertir la pregunta del usuario en un embedding
+- Buscar los K fragmentos más similares (top-k, tipicamente 3-5)
+- Opcionalmente reordenar (reranking) los resultados por relevancia
+
+3. Augmented Generation (Generación Aumentada)
+- Construir un prompt que incluya la pregunta y los fragmentos recuperados
+- Instruir al LLM para responder sólo con la información del contexto
+- Generar la respuesta
+
+Estrategias de Chunking
+
+El chunking es crítico para la calidad del RAG. Un chunk demasiado pequeño pierde contexto; uno demasiado grande dificulta la recuperación precisa.
+
+- Fixed Size: dividir en N caracteres/tokens. Simple pero puede cortar oraciones.
+- Recursive Character Text Splitter: intenta dividir por separadores naturales (párrafos, oraciones) antes de cortar por tamaño. Es el más recomendado para uso general.
+- Semantic Chunking: agrupa oraciones semánticamente similares. Más sofisticado, requiere modelos de embedding.
+- Overlap: incluir un porcentaje de solapamiento entre chunks adyacentes para no perder contexto en los bordes.
+
+Parámetros recomendados para RecursiveCharacterTextSplitter:
+- chunk_size: 500-1000 tokens (aprox. 2000-4000 caracteres)
+- chunk_overlap: 10% del chunk_size (50-100 tokens)
+
+Estrategias Avanzadas de RAG
+
+- HyDE (Hypothetical Document Embeddings): generar un documento hipotético que respondería la pregunta y usar su embedding para buscar.
+- Query Expansion: reformular la pregunta de múltiples maneras para recuperar más fragmentos relevantes.
+- Reranking: usar un modelo cross-encoder para reordenar los resultados iniciales por relevancia.
+- Multi-Query Retrieval: generar múltiples variantes de la pregunta y combinar resultados.
+- Parent Document Retrieval: indexar chunks pequeños pero recuperar el documento padre completo.
+- Self-Querying: el LLM genera filtros de metadatos para refinar la búsqueda vectorial.
+
+Métricas de Evaluación para RAG
+
+- Faithfulness: ¿la respuesta es fiel al contexto recuperado? (sin alucinaciones)
+- Answer Relevancy: ¿la respuesta es relevante para la pregunta?
+- Context Recall: ¿se recuperaron los fragmentos relevantes?
+- Context Precision: ¿los fragmentos recuperados son relevantes?
+
+Herramientas de evaluación: RAGAS (framework específico para evaluar RAG), DeepEval, TruLens.
+
+El principal error en sistemas RAG es usar embeddings diferentes para indexar y para consultar. Si se indexa con OpenAI Embeddings y se consulta con HuggingFace Embeddings, los vectores viven en espacios distintos y la búsqueda por similitud no tendrá sentido. Siempre debe usarse el mismo modelo de embeddings en ambas operaciones.
